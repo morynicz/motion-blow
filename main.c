@@ -70,10 +70,11 @@ void mpu9255ReadAccel(int fd, struct Point3d *point) {
 			 MPU9255_ACCEL_ZOUT, point);
 }
 
-    mpu9255Read3dRegisters(fd, MPU9255_ACCEL_XOUT_L, 
-			   MPU9255_ACCEL_XOUT, MPU9255_ACCEL_YOUT_L, 
-			   MPU9255_ACCEL_YOUT, MPU9255_ACCEL_ZOUT_L, 
-			   MPU9255_ACCEL_ZOUT, point); 
+void mpu9255ReadGyro(int fd, struct Point3d *point) {
+  mpu9255Read3dRegisters(fd, MPU9255_GYRO_XOUT_L,
+			 MPU9255_GYRO_XOUT, MPU9255_GYRO_YOUT_L,
+			 MPU9255_GYRO_YOUT, MPU9255_GYRO_ZOUT_L,
+			 MPU9255_GYRO_ZOUT, point);
 }
 
 int main(int argc, char* argv) {
@@ -90,10 +91,11 @@ int main(int argc, char* argv) {
   
   printf("mot = [\n");
   for(int i=0; i<1000; ++i) {
-    int x ,y, z;
-    struct Point3d point;
-    mpu9255ReadAccel(fd, &point);
-    printf("%d %d %d %d\n",i, point.x, point.y, point.z);
+    int x ,y, z, p, r, y;
+    struct Point3d acc, gyro;
+    mpu9255ReadAccel(fd, &acc);
+    mpu9255ReadGyro(fd, &gyro);
+    printf("%d %d %d %d %d %d %d\n",i, acc.x, acc.y, acc.z, gyro.x);
     usleep(1);
   }
   printf("]\n");
