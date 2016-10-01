@@ -91,11 +91,10 @@ int main(int argc, char* argv) {
   
   printf("mot = [\n");
   for(int i=0; i<1000; ++i) {
-    int x ,y, z, p, r, y;
     struct Point3d acc, gyro;
     mpu9255ReadAccel(fd, &acc);
     mpu9255ReadGyro(fd, &gyro);
-    printf("%d %d %d %d %d %d %d\n",i, acc.x, acc.y, acc.z, gyro.x);
+    printf("%d %d %d %d %d %d %d\n",i, acc.x, acc.y, acc.z, gyro.x,  gyro.y, gyro.z);
     usleep(1);
   }
   printf("]\n");
