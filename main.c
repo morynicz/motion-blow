@@ -1,6 +1,7 @@
 #include <wiringPiI2C.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <stdint.h>
 
 #define CHANNEL 0
 #define SPEED   1000000
@@ -33,23 +34,28 @@
 #define MPU9255_WHOAMI     0x75
 
 struct Point3d {
-  int x;
-  int y;
-  int z;
+  uint16_t x;
+  uint16_t y;
+  uint16_t z;
 };
 
 
-int assemble16(int l, int h) {
-  return (h<<8)|(l & 0xff);
+int16_t a;
+
+uint16_t assemble16(uint8_t l, uint8_t h) {
+  return (uint16_t)((h<<8)|(l & 0xff));
 }
 
-
+double transform(uint16_t input, int range) {
+	double result = (~((0xFFFF) & input) - 1) & 0xFFFF;
+	return result / range;
+}
 
 void mpu9255Read3dRegisters(int fd, int xLAddr, int xHAddr,
 			   int yLAddr, int yHAddr, int zLAddr,
 			   int zHAddr, struct Point3d *point)
 {
-  int xl, xh, yl, yh, zl, zh;
+  uint8_t xl, xh, yl, yh, zl, zh;
 
   xl = wiringPiI2CReadReg8(fd, xLAddr);
   xh = wiringPiI2CReadReg8(fd, xHAddr);
@@ -94,6 +100,9 @@ int main(int argc, char* argv) {
     struct Point3d acc, gyro;
     mpu9255ReadAccel(fd, &acc);
     mpu9255ReadGyro(fd, &gyro);
+
+    printf("%f\n", transform(acc.x, 16));
+
     printf("%d %d %d %d %d %d %d\n",i, acc.x, acc.y, acc.z, gyro.x,  gyro.y, gyro.z);
     usleep(1);
   }
