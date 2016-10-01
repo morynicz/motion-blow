@@ -45,18 +45,12 @@ int assemble16(int l, int h) {
 
 
 
-int mpu9255Read3dRegisters(int fd, int xLAddr, int xHAddr,
+void mpu9255Read3dRegisters(int fd, int xLAddr, int xHAddr,
 			   int yLAddr, int yHAddr, int zLAddr,
 			   int zHAddr, struct Point3d *point)
 {
   int xl, xh, yl, yh, zl, zh;
 
-  /*
-    x = wiringPiI2CReadReg16(fd, ACCEL_XOUT);
-    y = wiringPiI2CReadReg16(fd, ACCEL_YOUT);
-    z = wiringPiI2CReadReg16(fd, ACCEL_ZOUT);
-  */
-    
   xl = wiringPiI2CReadReg8(fd, xLAddr);
   xh = wiringPiI2CReadReg8(fd, xHAddr);
   yl = wiringPiI2CReadReg8(fd, yLAddr);
@@ -67,11 +61,14 @@ int mpu9255Read3dRegisters(int fd, int xLAddr, int xHAddr,
   point->x = assemble16(xl, xh);
   point->y = assemble16(yl, yh);
   point->z = assemble16(yl, yh);
-  
 }
 
-int mpu9255ReadAccel(int fd, struct Point3d *point) {
-    int xl, xh, yl, yh, zl, zh;
+void mpu9255ReadAccel(int fd, struct Point3d *point) {
+  mpu9255Read3dRegisters(fd, MPU9255_ACCEL_XOUT_L,
+			 MPU9255_ACCEL_XOUT, MPU9255_ACCEL_YOUT_L,
+			 MPU9255_ACCEL_YOUT, MPU9255_ACCEL_ZOUT_L,
+			 MPU9255_ACCEL_ZOUT, point);
+}
 
     mpu9255Read3dRegisters(fd, MPU9255_ACCEL_XOUT_L, 
 			   MPU9255_ACCEL_XOUT, MPU9255_ACCEL_YOUT_L, 
