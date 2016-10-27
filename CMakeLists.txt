@@ -3,6 +3,7 @@ project(MotionBlow CXX C)
 
 find_package(Threads REQUIRED)
 find_package(Boost COMPONENTS system program_options REQUIRED)
+include(gtest.cmake)
 
 
 add_executable(motionBlow src/blow.cpp)
