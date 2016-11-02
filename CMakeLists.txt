@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.5)
-project(MotionBlow CXX C)
+cmake_minimum_required(VERSION 3.2)
+project(MotionBlow C CXX)
 
 find_package(Threads REQUIRED)
 find_package(Boost COMPONENTS system program_options REQUIRED)
@@ -21,3 +21,11 @@ target_include_directories(chat_server PUBLIC include)
 target_link_libraries(chat_server ${Boost_LIBRARIES} Threads::Threads)
 set_property(TARGET chat_server PROPERTY CXX_STANDARD 14)
 
+enable_testing()
+
+add_executable(matrixTest test/MatrixTest.cpp src/Matrix.cpp)
+target_include_directories(matrixTest PUBLIC include ${GTEST_INCLUDE_DIR})
+target_link_libraries(matrixTest ${GTEST_LIBRARY} Threads::Threads)
+set_property(TARGET matrixTest PROPERTY CXX_STANDARD 14)
+
+add_test(MatrixTest matrixTest)
