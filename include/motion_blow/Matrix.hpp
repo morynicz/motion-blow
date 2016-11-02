@@ -23,6 +23,7 @@ public:
     Matrix operator*(const Matrix &m) const;
     Matrix operator*(const double &s) const;
     bool operator==(const Matrix &m) const;
+    bool operator!=(const Matrix &m) const;
     unsigned getWidth() const
     {
         return _width;
@@ -33,6 +34,7 @@ public:
     }
     Matrix t() const;
     double &at(unsigned i, unsigned j);
+    static Matrix IdentityMatrix(const unsigned &size);
 };
 
 class MatrixException: public std::exception

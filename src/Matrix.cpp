@@ -91,7 +91,20 @@ bool Matrix::operator ==(const Matrix& m) const
     return _data == m._data && _width == m._width && _height == m._height;
 }
 
+bool Matrix::operator!=(const Matrix &m) const
+{
+    return !(*this == m);
+}
+
 double& Matrix::at(unsigned i, unsigned j)
 {
     return _data[i][j];
+}
+
+Matrix Matrix::IdentityMatrix(const unsigned & size) {
+    std::vector<std::vector<double>> data(size, std::vector<double>(size));
+    for(auto i=0; i < size; ++i) {
+        data[i][i]=1;
+    }
+    return Matrix(size,size,data);
 }

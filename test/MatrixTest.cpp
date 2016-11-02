@@ -53,6 +53,14 @@ TEST(MatrixTest, MatrixMultiplicationByScalar) {
     EXPECT_EQ(1,1); //Later
 }
 
+TEST(MatrixTest, MatrixMultiplyByIdentity) {
+    EXPECT_EQ(m1 * Matrix::IdentityMatrix(2), m1);
+}
+
+TEST(MatrixTest, MatrixOperatorNotEqual) {
+    EXPECT_TRUE(m1 != m2);
+}
+
 int main(int argc, char **argv)
 {
     ::testing::InitGoogleTest(&argc, argv);
