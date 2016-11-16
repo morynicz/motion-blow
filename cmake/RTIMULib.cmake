@@ -10,6 +10,7 @@ ExternalProject_Add(
     GIT_REPOSITORY "https://github.com/Nick-Currawong/RTIMULib2.git"
     # Disable install step
     INSTALL_COMMAND ""
+    UPDATE_COMMAND ""
     # Wrap download, configure and build steps in a script to log output
     LOG_DOWNLOAD ON
     LOG_CONFIGURE ON
@@ -33,7 +34,7 @@ ExternalProject_Add_Step(rtimulib GenerateCMakeLists
   COMMAND echo "add_subdirectory(RTIMULib)" > CMakeLists.txt
   COMMENT creating ${binary_dir}/CMakeLists.txt
   BYPRODUCTS ${binary_dir}/CMakeLists.txt
-  DEPENDEES download 
+  DEPENDEES update 
   DEPENDERS configure
   ALWAYS 1
 )

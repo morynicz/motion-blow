@@ -3,8 +3,8 @@ project(MotionBlow C CXX)
 
 find_package(Threads REQUIRED)
 find_package(Boost COMPONENTS system program_options REQUIRED)
-include(gtest.cmake)
-include(RTIMULib.cmake)
+include(cmake/gtest.cmake)
+include(cmake/RTIMULib.cmake)
 
 add_executable(motionBlow src/blow.cpp)
 target_include_directories(motionBlow PUBLIC include ${RTIMULIB_INCLUDE_DIR})
