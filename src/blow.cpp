@@ -4,19 +4,19 @@
 
 std::ostream &operator<<(std::ostream &stream, const RTVector3 &vector)
 {
-    stream<<vector.x()<<" "<<vector.y()<<" "<<vector.z();
+    stream << vector.x() << " " << vector.y() << " " << vector.z();
     return stream;
 }
 
 std::ostream &operator<<(std::ostream &stream, const RTQuaternion &q)
 {
-    stream<<q.scalar()<<" "<<q.x()<<" "<<q.y()<<" "<<q.z();
+    stream << q.scalar() << " " << q.x() << " " << q.y() << " " << q.z();
     return stream;
 }
 
 std::ostream &operator<<(std::ostream &stream, const RTIMU_DATA &data)
 {
-    stream<<data.fusionQPose<< " " << data.accel;
+    stream << data.fusionQPose << " " << data.accel;
     return stream;
 }
 
@@ -32,9 +32,10 @@ int main(int argc, char **argv)
 
     RTIMU *imu = RTIMU::createIMU(settings);
 
-    if ((imu == NULL) || (imu->IMUType() == RTIMU_TYPE_NULL)) {
-      std::cerr<<"No IMU found\n"<<std::endl;
-      exit(1);
+    if ((imu == NULL) || (imu->IMUType() == RTIMU_TYPE_NULL))
+    {
+        std::cerr << "No IMU found\n" << std::endl;
+        exit(1);
     }
 
     imu->IMUInit();
@@ -53,14 +54,13 @@ int main(int argc, char **argv)
 
     for (int i = 0; i < 1000; ++i)
     {
-    	usleep(imu->IMUGetPollInterval() * 1000);
+        usleep(imu->IMUGetPollInterval() * 1000);
 
-    	while(imu->IMURead())
-    	{
-	  RTIMU_DATA imuData = imu->getIMUData();
-	  fs << imuData.timestamp << " " << imuData << std::endl;
-    	}
-
+        while (imu->IMURead())
+        {
+            RTIMU_DATA imuData = imu->getIMUData();
+            fs << imuData.timestamp << " " << imuData << std::endl;
+        }
     }
     fs << "];";
     fs.close();
