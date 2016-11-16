@@ -25,15 +25,5 @@ set_property(TARGET chat_server PROPERTY CXX_STANDARD 14)
 
 enable_testing()
 
-add_executable(matrixTest test/MatrixTest.cpp src/Matrix.cpp)
-target_include_directories(matrixTest PUBLIC include ${GTEST_INCLUDE_DIR})
-target_link_libraries(matrixTest ${GTEST_LIBRARY} Threads::Threads)
-set_property(TARGET matrixTest PROPERTY CXX_STANDARD 14)
 
-add_executable(rotationMatrixTest test/RotationMatrixTest.cpp src/RotationMatrix.cpp src/Matrix.cpp)
-target_include_directories(rotationMatrixTest PUBLIC include ${GTEST_INCLUDE_DIR})
-target_link_libraries(rotationMatrixTest ${GTEST_LIBRARY} Threads::Threads)
-set_property(TARGET rotationMatrixTest PROPERTY CXX_STANDARD 14)
 
-add_test(MatrixTest matrixTest)
-add_test(RotationMatrixTest rotationMatrixTest)
