@@ -2,10 +2,11 @@
 
 # Additional targets to perform clang-format/clang-tidy
 # Get all project files
-file(GLOB_RECURSE
-  ALL_CXX_SOURCE_FILES
-  *.[chi]pp *.[chi]xx *.cc *.hh *.ii *.[CHI]
-  )
+#file(GLOB_RECURSE
+ # ALL_CXX_SOURCE_FILES
+  #*.[chi]pp *.[chi]xx *.cc *.hh *.ii *.[CHI]
+ # src/*.cpp src/*.cxx src/*.cc src/*.c include/*/*.hpp
+ # )
 
 # Adding clang-format target if executable is found
 find_program(CLANG_FORMAT "clang-format")
@@ -25,10 +26,7 @@ if(CLANG_TIDY)
   add_custom_target(
     clang-tidy
     COMMAND /usr/bin/clang-tidy
+    -p .
     ${ALL_CXX_SOURCE_FILES}
-    -config=''
-    --
-    -std=c++11
-    ${INCLUDE_DIRECTORIES}
     )
   endif()

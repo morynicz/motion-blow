@@ -5,7 +5,6 @@ find_package(Threads REQUIRED)
 find_package(Boost COMPONENTS system program_options REQUIRED)
 include(cmake/gtest.cmake)
 include(cmake/RTIMULib.cmake)
-include(cmake/clang-cxx-dev-tools.cmake)
 include(cmake/eigen.cmake)
 
 add_executable(motionBlow src/blow.cpp)
@@ -30,4 +29,10 @@ set_property(TARGET ec PROPERTY CXX_STANDARD 14)
 
 enable_testing()
 
+set(ALL_CXX_SOURCE_FILES
+	${PROJECT_SOURCE_DIR}/include/motion_blow/*.hpp
+	${PROJECT_SOURCE_DIR}/src/blow.cpp
+	${PROJECT_SOURCE_DIR}/src/EigenCheck.cpp
+	)
 
+include(cmake/clang-cxx-dev-tools.cmake)
