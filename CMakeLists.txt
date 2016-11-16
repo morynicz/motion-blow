@@ -23,7 +23,11 @@ target_include_directories(chat_server PUBLIC include)
 target_link_libraries(chat_server ${Boost_LIBRARIES} Threads::Threads)
 set_property(TARGET chat_server PROPERTY CXX_STANDARD 14)
 
-enable_testing()
+add_executable(ec src/EigenCheck.cpp)
+target_include_directories(ec PUBLIC include ${RTIMULIB_INCLUDE_DIR} ${EIGEN_INCLUDE_DIR})
+target_link_libraries(ec ${RTIMULIB_LIBRARY} ${Boost_LIBRARIES})
+set_property(TARGET ec PROPERTY CXX_STANDARD 14)
 
+enable_testing()
 
 
