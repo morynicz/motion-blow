@@ -1,5 +1,5 @@
 #include "Eigen/Dense"
-#include "RTIMULib.h"
+#include "RTIMULib/RTIMULib.h"
 #include <fstream>
 #include <iostream>
 #include <tuple>
