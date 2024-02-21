@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+message Measurement
+{
+    uint64 timestamp = 1;
+    double qx = 2;
+    double qy = 3;
+    double qz = 4;
+    double qs = 5;
+    double x = 6;
+    double y = 7;
+    double z = 8;
+}
