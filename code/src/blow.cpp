@@ -26,7 +26,7 @@ class Device
 {
     struct Measurement
     {
-        unsigned long timestamp;
+        uint64_t timestamp;
         double qx;
         double qy;
         double qz;
