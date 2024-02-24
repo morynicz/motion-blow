@@ -1,16 +1,17 @@
-CFLAGS = -std=gnu99
-CXXFLAGS = -std=c++14
+PROJECT=motion-blow
 
-all: mot cclient cserver motionBlow
+all: build run
 
-mot: main.c
-	gcc main.c ${CFLAGS} -lwiringPi -o mot 
+build:
+	sudo docker buildx build -t ${PROJECT} --build-context code=`pwd`/code .
 
-cclient: src/chat_client.cpp
-	g++ src/chat_client.cpp ${CXXFLAGS} -Iinclude -lpthread -lboost_system -o cclient
+run:
+	sudo docker run --mount type=bind,source=`pwd`/code,target=/source,readonly -it ${PROJECT}
 
-cserver: src/chat_server.cpp
-	g++ src/chat_server.cpp ${CXXFLAGS} -Iinclude -lpthread -lboost_system -o cserver
+test:
+	sudo docker run --mount type=bind,source=`pwd`/code,target=/source,readonly -it ${PROJECT} ninja run_tests
 
-motionBlow: src/blow.cpp
-	g++ src/blow.cpp ${CXXFLAGS} -lRTIMULib -lpthread -lboost_system -o motionBlow
+format:
+	clang-format-15 -i code/src/* code/include/*/*
+
+.PHONY: all build run

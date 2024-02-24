@@ -3,13 +3,15 @@ project(MotionBlow C CXX)
 
 find_package(Threads REQUIRED)
 find_package(Boost COMPONENTS system program_options REQUIRED)
+find_package(Protobuf REQUIRED)
+find_package(Eigen3 3.3 REQUIRED NO_MODULE)
 
 include(FetchContent)
 FetchContent_Declare(
         rtimulib
         GIT_REPOSITORY https://github.com/morynicz/RTIMULib2.git
         GIT_TAG master
-		SOURCE_SUBDIR RTIMULib
+        SOURCE_SUBDIR RTIMULib
 )
 
 
@@ -19,30 +21,13 @@ FetchContent_Declare(
         GIT_TAG main
 )
 
-FetchContent_Declare(
-	eigen
-    GIT_REPOSITORY https://gitlab.com/libeigen/eigen.git
-    GIT_TAG 3.4.0
-)
+FetchContent_MakeAvailable(rtimulib googletest)
 
-FetchContent_Declare(
-	protobuf
-	GIT_REPOSITORY https://github.com/protocolbuffers/protobuf.git
-	GIT_TAG main
-)
-
-FetchContent_MakeAvailable(eigen rtimulib googletest)
-
-FetchContent_GetProperties(rtimulib)
-
-if(NOT rtimulib_POPULATED)
-message("dupa")
-endif()
-message("plecha" "${rtimulib_SOURCE_DIR} ${rtimulib_BINARY_DIR}")
+add_subdirectory(messages)
 
 add_executable(motionBlow src/blow.cpp)
-target_include_directories(motionBlow PUBLIC include rtimulib protobuf)
-target_link_libraries(motionBlow PUBLIC RTIMULib ${Boost_LIBRARIES})
+target_include_directories(motionBlow PUBLIC include)
+target_link_libraries(motionBlow PUBLIC RTIMULib ${Boost_LIBRARIES} messages)
 target_compile_features(motionBlow PUBLIC cxx_std_20)
 
 add_executable(chat_client src/chat_client.cpp)

@@ -1,6 +1,8 @@
 #include "RTIMULib/RTIMULib.h"
 #include <fstream>
 #include <iostream>
+#include "messages/Measurement.hpp"
+#include <memory>
 
 std::ostream &operator<<(std::ostream &stream, const RTVector3 &vector)
 {
