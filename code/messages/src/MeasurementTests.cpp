@@ -1,5 +1,5 @@
 #include "gmock/gmock.h"
-#include "measurement/Measurement.hpp"
+#include "messages/Measurement.hpp"
 #include "gtest/gtest.h"
 
 using testing::AllOf;
@@ -14,7 +14,7 @@ TEST(MeasurementTests, testSerializationAndDeserialization)
 
     messages::Measurement expectedMeasurement{measurement};
     EXPECT_THAT(measurement,
-                AllOF(Field("timestamp", &Measurement::timestamp,
+                AllOf(Field("timestamp", &Measurement::timestamp,
                             expectedMeasurement.timestamp),
                       Field("qx", &Measurement::qx, expectedMeasurement.qx),
                       Field("qy", &Measurement::qy, expectedMeasurement.qy),
