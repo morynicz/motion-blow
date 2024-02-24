@@ -1,6 +1,8 @@
 #pragma once
 #include <iosfwd>
 
+namespace messages
+{
 struct Measurement
 {
     const long timestamp;
@@ -12,4 +14,4 @@ struct Measurement
     const double y;
     const double z;
 };
-
+} // namespace messages

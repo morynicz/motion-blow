@@ -18,3 +18,8 @@ protobuf_generate(
 add_library(messages src/Measurement.cpp)
 target_include_directories(messages PUBLIC include)
 target_link_libraries(messages PRIVATE protos)
+
+enable_testing()
+
+add_executable(messageTests src/MeasurementTests.cpp)
+target_link_libraries(messageTests PUBLIC gmock_main gtest gmock messages)

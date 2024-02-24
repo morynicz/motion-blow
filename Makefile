@@ -12,6 +12,6 @@ test:
 	sudo docker run --mount type=bind,source=`pwd`/code,target=/source,readonly -it ${PROJECT} ninja run_tests
 
 format:
-	clang-format-15 -i code/src/* code/include/*/*
+	clang-format-15 -i `find code -type f \( -iname *.hpp -o -iname *.cpp \)`
 
 .PHONY: all build run
