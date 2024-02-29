@@ -1,11 +1,12 @@
 #pragma once
 #include <iosfwd>
+#include <cstdint>
 
 namespace messages
 {
 struct Measurement
 {
-    const long timestamp;
+    const uint64_t timestamp;
     const double qx;
     const double qy;
     const double qz;
@@ -13,5 +14,8 @@ struct Measurement
     const double x;
     const double y;
     const double z;
+
+    std::string serialize() const;
+    static Measurement deserialize(const std::string&);
 };
 } // namespace messages

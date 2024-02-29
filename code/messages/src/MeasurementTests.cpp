@@ -12,8 +12,11 @@ TEST(MeasurementTests, testSerializationAndDeserialization)
 {
     messages::Measurement measurement{1u, 2, 3, 4, 5, 6, 7, 8};
 
+    auto serialized  = measurement.serialize();
+    auto deserialized = Measurement::deserialize(serialized);
+
     messages::Measurement expectedMeasurement{measurement};
-    EXPECT_THAT(measurement,
+    EXPECT_THAT(deserialized,
                 AllOf(Field("timestamp", &Measurement::timestamp,
                             expectedMeasurement.timestamp),
                       Field("qx", &Measurement::qx, expectedMeasurement.qx),

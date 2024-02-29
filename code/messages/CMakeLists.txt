@@ -1,8 +1,3 @@
-
-
-# set(PROTO_BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}/generated")
-# set(PROTO_IMPORT_DIRS "${CMAKE_CURRENT_LIST_DIR}/proto")
-
 add_library(protos OBJECT protos/Measurement.proto)
 target_link_libraries(protos PUBLIC protobuf::libprotobuf)
 set(PROTO_GENERATED_DIR ${CMAKE_CURRENT_BINARY_DIR}/generated)
