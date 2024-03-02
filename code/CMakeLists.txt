@@ -26,9 +26,9 @@ FetchContent_MakeAvailable(rtimulib googletest)
 add_subdirectory(messages)
 add_subdirectory(network)
 
-add_executable(motionBlow src/blow.cpp src/Device.cpp)
+add_executable(motionBlow src/blow.cpp src/Device.cpp src/ImuDevice.cpp)
 target_include_directories(motionBlow PUBLIC include)
-target_link_libraries(motionBlow PUBLIC RTIMULib ${Boost_LIBRARIES} messages)
+target_link_libraries(motionBlow PUBLIC RTIMULib ${Boost_LIBRARIES} messages network)
 target_compile_features(motionBlow PUBLIC cxx_std_20)
 
 add_executable(server src/srvMain.cpp)
