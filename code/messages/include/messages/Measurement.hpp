@@ -17,5 +17,6 @@ struct Measurement
 
     std::string serialize() const;
     static Measurement deserialize(const std::string&);
+    friend std::ostream& operator<<(std::ostream& os, const Measurement& in);
 };
 } // namespace messages

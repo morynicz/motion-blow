@@ -2,6 +2,7 @@
 #include <iostream>
 #include <utility>
 #include <boost/asio.hpp>
+#include "messages/Measurement.hpp"
 
 using boost::asio::ip::tcp;
 
@@ -9,9 +10,9 @@ int main(int argc, char* argv[])
 {
   try
   {
-    if (argc != 2)
+    if (argc != 3)
     {
-      std::cerr << "Usage: client <host>" << std::endl;
+      std::cerr << "Usage: client <host> <port>" << std::endl;
       return 1;
     }
 
@@ -19,14 +20,14 @@ int main(int argc, char* argv[])
 
     tcp::resolver resolver(io_context);
     tcp::resolver::results_type endpoints =
-      resolver.resolve(argv[1], "daytime");
+      resolver.resolve(argv[1], argv[2]);
 
     tcp::socket socket(io_context);
     boost::asio::connect(socket, endpoints);
 
     for (;;)
     {
-      std::array<char, 128> buf;
+      std::array<char, 1024> buf;
       boost::system::error_code error;
 
       size_t len = socket.read_some(boost::asio::buffer(buf), error);
@@ -36,7 +37,10 @@ int main(int argc, char* argv[])
       else if (error)
         throw boost::system::system_error(error); // Some other error.
 
-      std::cout.write(buf.data(), len);
+    //   std::cout.write(buf.data(), len);
+    std::string interrim(buf.begin(), buf.begin() + len);
+    messages::Measurement meas = messages::Measurement::deserialize(interrim);
+    std::cout << meas << std::endl;
     }
   }
   catch (std::exception& e)

@@ -1,5 +1,6 @@
 #include "messages/Measurement.hpp"
 #include "protos/Measurement.pb.h"
+#include <ostream>
 
 namespace messages
 {
@@ -33,5 +34,10 @@ std::string Measurement::serialize() const
     std::string serialized;
     proto.SerializeToString(&serialized);
     return serialized;
+}
+
+std::ostream& operator<<(std::ostream& os, const Measurement& in)
+{
+    return os <<in.timestamp <<", "<<in.qx <<", "<<in.qy <<", "<<in.qz <<", "<<in.qs <<", "<<in.x <<", "<<in.y <<", "<<in.z;
 }
 }

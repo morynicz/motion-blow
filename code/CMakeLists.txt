@@ -24,19 +24,20 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(rtimulib googletest)
 
 add_subdirectory(messages)
+add_subdirectory(network)
 
 add_executable(motionBlow src/blow.cpp src/Device.cpp)
 target_include_directories(motionBlow PUBLIC include)
 target_link_libraries(motionBlow PUBLIC RTIMULib ${Boost_LIBRARIES} messages)
 target_compile_features(motionBlow PUBLIC cxx_std_20)
 
-add_executable(server src/server.cpp)
+add_executable(server src/srvMain.cpp)
 target_compile_features(server PUBLIC cxx_std_20)
-target_link_libraries(server ${Boost_LIBRARIES} Threads::Threads)
+target_link_libraries(server PUBLIC ${Boost_LIBRARIES} Threads::Threads network messages)
 
 add_executable(client src/client.cpp)
 target_compile_features(client PUBLIC cxx_std_20)
-target_link_libraries(client ${Boost_LIBRARIES} Threads::Threads)
+target_link_libraries(client ${Boost_LIBRARIES} Threads::Threads messages)
 # add_executable(chat_client src/chat_client.cpp)
 # target_include_directories(chat_client PUBLIC include)
 # target_link_libraries(chat_client ${Boost_LIBRARIES} Threads::Threads)
