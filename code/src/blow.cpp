@@ -5,6 +5,7 @@
 #include "motion_blow/ImuDevice.hpp"
 #include "motion_blow/Queue.hpp"
 #include "network/TcpServer.hpp"
+#include <boost/program_options.hpp>
 #include <chrono>
 #include <condition_variable>
 #include <deque>
@@ -38,11 +39,10 @@ class DummyDevice : public Device
     uint64_t frameCounter{0};
 };
 
-void runDevice(Queue<Device::Measurement> &queue, std::stop_source stop)
+void runDevice(Queue<Device::Measurement> &queue, std::stop_source stop,
+               std::unique_ptr<Device> &&device)
 {
     auto stoken = stop.get_token();
-    // auto device = std::make_unique<ImuDevice>("RTIMULib");
-    auto device = std::make_unique<DummyDevice>();
     while (not stoken.stop_requested())
     {
         std::this_thread::sleep_for(
@@ -53,50 +53,164 @@ void runDevice(Queue<Device::Measurement> &queue, std::stop_source stop)
             auto measurement = device->getLastMeasurement();
             queue.push(measurement);
         }
-        std::cout << "dev token " << stoken.stop_requested() << " source "
-                  << stop.stop_requested() << " pos " << stop.stop_possible()
-                  << std::endl;
     }
 }
 
-void saveToFile(Queue<Device::Measurement> &inputQeue,
-                Queue<Device::Measurement> &serverQueue, std::stop_source stop)
+class MeasurementHandler
+{
+  public:
+    virtual void handle(const Device::Measurement &) = 0;
+    virtual ~MeasurementHandler() = default;
+};
+
+class MeasurementWriter : public MeasurementHandler
+{
+  public:
+    MeasurementWriter(const std::string &fileName)
+    {
+        fs.open("output.m", std::fstream::out);
+        fs << "[\n";
+    }
+    void handle(const Device::Measurement &meas) { fs << meas << std::endl; }
+    ~MeasurementWriter()
+    {
+        fs << "];";
+        fs.close();
+    }
+
+  private:
+    std::fstream fs;
+};
+
+class ServerQueueFeeder : public MeasurementHandler
+{
+  public:
+    ServerQueueFeeder(Queue<Device::Measurement> &serverQueue)
+        : serverQueue(serverQueue)
+    {
+    }
+    void handle(const Device::Measurement &meas) override
+    {
+        serverQueue.push(meas);
+    }
+
+  private:
+    Queue<Device::Measurement> &serverQueue;
+};
+
+void saveToFile(Queue<Device::Measurement> &inputQeue, std::stop_source stop,
+                std::vector<std::unique_ptr<MeasurementHandler>> &&handlers)
 {
     auto stoken = stop.get_token();
-    std::fstream fs;
-
-    fs.open("output.m", std::fstream::out);
-
-    fs << "[\n";
 
     do
     {
         if (auto measurement = inputQeue.pop())
         {
-            serverQueue.push(*measurement);
-            fs << *measurement << std::endl;
+            for (auto &handler : handlers)
+            {
+                handler->handle(*measurement);
+            }
         }
         else
         {
             std::this_thread::sleep_for(std::chrono::seconds(1));
         }
-        std::cout << "wr token " << stoken.stop_requested() << " source "
-                  << stop.stop_requested() << " pos " << stop.stop_possible()
-                  << std::endl;
     } while (not stoken.stop_requested());
-    fs << "];";
-    fs.close();
+}
+
+std::unique_ptr<Device> makeDevice(bool useDummy,
+                                   const std::string &calibrationFile)
+{
+    if (useDummy)
+    {
+        return std::make_unique<DummyDevice>();
+    }
+    return std::make_unique<ImuDevice>(calibrationFile);
 }
 
 int main(int argc, char **argv)
 {
-    const uint buffSize = 10000;
-    Queue<Device::Measurement> inputQueue{10000};
-    Queue<Device::Measurement> serverQueue{10000};
+    const std::string defaultCalibrationfile = "RTIMULib";
+    const uint defaultBufferSize = 10000;
+    std::string calibrationFile;
+    std::string outputfile;
+    bool useDummy = false;
+    int port;
+    uint buffSize;
+
+    boost::program_options::options_description desc;
+    boost::program_options::variables_map vm;
+
+    desc.add_options()("help,h", "Print this help message and exit")(
+        "output,o", boost::program_options::value<std::string>(),
+        "output file to save readings locally")(
+        "calib,c",
+        boost::program_options::value<std::string>(&calibrationFile)
+            ->default_value(defaultCalibrationfile),
+        "file with calibration settings for the device")(
+        "dummy,d", "use dummy device instead of a real one")(
+        "port,p", boost::program_options::value<int>(),
+        "port for tcp connection")(
+        "buffer,b",
+        boost::program_options::value<uint>(&buffSize)->default_value(
+            defaultBufferSize),
+        "buffer size");
+
+    boost::program_options::store(
+        boost::program_options::parse_command_line(argc, argv, desc), vm);
+    boost::program_options::notify(vm);
+
+    std::vector<std::unique_ptr<MeasurementHandler>> handlers;
+
+    if (vm.count("help"))
+    {
+        std::cout << desc << std::endl;
+        return 0;
+    }
+
+    if (vm.count("buffer"))
+    {
+        buffSize = vm["buffer"].as<uint>();
+        std::cout << "Buffer: " << buffSize << std::endl;
+    }
+
+    Queue<Device::Measurement> inputQueue{buffSize};
+    Queue<Device::Measurement> serverQueue{buffSize};
+
+    if (vm.count("output"))
+    {
+        auto outputFile = vm["output"].as<std::string>();
+        std::cout << outputFile << std::endl;
+        handlers.push_back(std::make_unique<MeasurementWriter>(outputFile));
+    }
+
+    if (vm.count("calib"))
+    {
+        calibrationFile = vm["calib"].as<std::string>();
+        std::cout << calibrationFile << std::endl;
+    }
+
+    if (vm.count("dummy"))
+    {
+        std::cout << "Use dummy" << std::endl;
+        useDummy = true;
+    }
+
+    if (vm.count("port"))
+    {
+        port = vm["port"].as<int>();
+        std::cout << "Port: " << port << std::endl;
+        handlers.push_back(std::make_unique<ServerQueueFeeder>(serverQueue));
+    }
+
+    auto device = makeDevice(useDummy, calibrationFile);
+
     std::stop_source stop;
-    std::jthread devThread{runDevice, std::ref(inputQueue), stop};
-    std::jthread writeThread{saveToFile, std::ref(inputQueue),
-                             std::ref(serverQueue), stop};
+    std::jthread devThread{runDevice, std::ref(inputQueue), stop,
+                           std::move(device)};
+    std::jthread writeThread{saveToFile, std::ref(inputQueue), stop,
+                             std::move(handlers)};
 
     boost::asio::io_context io_context;
     TcpServer server(
@@ -112,7 +226,7 @@ int main(int argc, char **argv)
             }
             return std::nullopt;
         },
-        9219);
+        port);
     std::jthread serverThread{[&io_context]() { io_context.run(); }};
 
     char input = '1';
