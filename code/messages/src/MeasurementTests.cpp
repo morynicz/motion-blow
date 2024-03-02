@@ -12,7 +12,7 @@ TEST(MeasurementTests, testSerializationAndDeserialization)
 {
     messages::Measurement measurement{1u, 2, 3, 4, 5, 6, 7, 8};
 
-    auto serialized  = measurement.serialize();
+    auto serialized = measurement.serialize();
     auto deserialized = Measurement::deserialize(serialized);
 
     messages::Measurement expectedMeasurement{measurement};

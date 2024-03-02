@@ -1,7 +1,6 @@
 #pragma once
-#include <iosfwd>
 #include <cstdint>
-
+#include <iosfwd>
 
 class Device
 {
@@ -22,6 +21,7 @@ class Device
     virtual bool readMeasurement() = 0;
     virtual Measurement getLastMeasurement() const = 0;
     virtual ~Device() = default;
-private:
+
+  private:
     friend std::ostream &operator<<(std::ostream &, const Measurement &);
 };

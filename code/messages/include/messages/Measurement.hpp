@@ -1,6 +1,6 @@
 #pragma once
-#include <iosfwd>
 #include <cstdint>
+#include <iosfwd>
 
 namespace messages
 {
@@ -16,7 +16,7 @@ struct Measurement
     const double z;
 
     std::string serialize() const;
-    static Measurement deserialize(const std::string&);
-    friend std::ostream& operator<<(std::ostream& os, const Measurement& in);
+    static Measurement deserialize(const std::string &);
+    friend std::ostream &operator<<(std::ostream &os, const Measurement &in);
 };
 } // namespace messages

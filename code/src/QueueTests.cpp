@@ -1,7 +1,7 @@
 #include "motion_blow/Queue.hpp"
 #include "gtest/gtest.h"
 
-struct QueueTests: public testing::Test
+struct QueueTests : public testing::Test
 {
     Queue<int> queue{3u};
 };
@@ -35,7 +35,7 @@ TEST_F(QueueTests, queueIsEmptyAfterAllElementsPopped)
     const int el1{9090};
     queue.push(el1);
     queue.pop();
-    
+
     EXPECT_EQ(queue.pop(), std::nullopt);
 }
 

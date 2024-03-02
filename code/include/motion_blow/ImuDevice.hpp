@@ -1,12 +1,12 @@
 #pragma once
-#include <iosfwd>
-#include <cstdint>
 #include "motion_blow/Device.hpp"
+#include <cstdint>
+#include <iosfwd>
 
 class RTIMUSettings;
 class RTIMU;
 
-class ImuDevice: public Device
+class ImuDevice : public Device
 {
   public:
     ImuDevice(const std::string &);

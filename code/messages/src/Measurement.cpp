@@ -4,20 +4,12 @@
 
 namespace messages
 {
-Measurement Measurement::deserialize(const std::string& serialized)
+Measurement Measurement::deserialize(const std::string &serialized)
 {
     protos::Measurement proto;
     proto.ParseFromString(serialized);
-    return {
-        proto.timestamp(),
-        proto.qx(),
-        proto.qy(),
-        proto.qz(),
-        proto.qs(),
-        proto.x(),
-        proto.y(),
-        proto.z()
-    };
+    return {proto.timestamp(), proto.qx(), proto.qy(), proto.qz(),
+            proto.qs(),        proto.x(),  proto.y(),  proto.z()};
 }
 
 std::string Measurement::serialize() const
@@ -36,8 +28,9 @@ std::string Measurement::serialize() const
     return serialized;
 }
 
-std::ostream& operator<<(std::ostream& os, const Measurement& in)
+std::ostream &operator<<(std::ostream &os, const Measurement &in)
 {
-    return os <<in.timestamp <<", "<<in.qx <<", "<<in.qy <<", "<<in.qz <<", "<<in.qs <<", "<<in.x <<", "<<in.y <<", "<<in.z;
+    return os << in.timestamp << ", " << in.qx << ", " << in.qy << ", " << in.qz
+              << ", " << in.qs << ", " << in.x << ", " << in.y << ", " << in.z;
 }
-}
+} // namespace messages
