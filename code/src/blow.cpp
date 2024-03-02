@@ -197,11 +197,31 @@ int main(int argc, char **argv)
         useDummy = true;
     }
 
+    boost::asio::io_context io_context;
+    std::unique_ptr<std::jthread> serverThread;
+    std::unique_ptr<TcpServer> server;
     if (vm.count("port"))
     {
         port = vm["port"].as<int>();
         std::cout << "Port: " << port << std::endl;
         handlers.push_back(std::make_unique<ServerQueueFeeder>(serverQueue));
+
+        server = std::make_unique<TcpServer>(
+            io_context,
+            [&serverQueue]() -> std::optional<std::string>
+            {
+                while (auto meas = serverQueue.pop())
+                {
+                    messages::Measurement measurement{
+                        meas->timestamp, meas->qx, meas->qy, meas->qz,
+                        meas->qs,        meas->x,  meas->y,  meas->z};
+                    return measurement.serialize();
+                }
+                return std::nullopt;
+            },
+            port);
+        serverThread = std::make_unique<std::jthread>([&io_context]()
+                                                      { io_context.run(); });
     }
 
     auto device = makeDevice(useDummy, calibrationFile);
@@ -211,23 +231,6 @@ int main(int argc, char **argv)
                            std::move(device)};
     std::jthread writeThread{saveToFile, std::ref(inputQueue), stop,
                              std::move(handlers)};
-
-    boost::asio::io_context io_context;
-    TcpServer server(
-        io_context,
-        [&serverQueue]() -> std::optional<std::string>
-        {
-            while (auto meas = serverQueue.pop())
-            {
-                messages::Measurement measurement{
-                    meas->timestamp, meas->qx, meas->qy, meas->qz,
-                    meas->qs,        meas->x,  meas->y,  meas->z};
-                return measurement.serialize();
-            }
-            return std::nullopt;
-        },
-        port);
-    std::jthread serverThread{[&io_context]() { io_context.run(); }};
 
     char input = '1';
     while (input != 'q')
