@@ -52,6 +52,12 @@ target_include_directories(ec PUBLIC include)
 target_link_libraries(ec PUBLIC rtimulib ${Boost_LIBRARIES} Eigen3::Eigen)
 target_compile_features(ec PUBLIC cxx_std_20)
 
+add_executable(tests src/QueueTests.cpp)
+target_include_directories(tests PUBLIC include)
+target_link_libraries(tests PUBLIC gmock_main gtest gmock)
+target_compile_features(tests PUBLIC cxx_std_20)
+
+
 enable_testing()
 
 set(ALL_CXX_SOURCE_FILES
