@@ -38,19 +38,10 @@ target_link_libraries(server PUBLIC ${Boost_LIBRARIES} Threads::Threads network 
 add_executable(client src/client.cpp)
 target_compile_features(client PUBLIC cxx_std_20)
 target_link_libraries(client ${Boost_LIBRARIES} Threads::Threads messages)
-# add_executable(chat_client src/chat_client.cpp)
-# target_include_directories(chat_client PUBLIC include)
-# target_link_libraries(chat_client ${Boost_LIBRARIES} Threads::Threads)
-# target_compile_features(chat_client PUBLIC cxx_std_20)
-
-# add_executable(chat_server src/chat_server.cpp)
-# target_include_directories(chat_server PUBLIC include)
-# target_link_libraries(chat_server ${Boost_LIBRARIES} Threads::Threads)
-# target_compile_features(chat_server PUBLIC cxx_std_20)
 
 add_executable(ec src/EigenCheck.cpp)
 target_include_directories(ec PUBLIC include)
-target_link_libraries(ec PUBLIC rtimulib ${Boost_LIBRARIES} Eigen3::Eigen)
+target_link_libraries(ec PUBLIC RTIMULib ${Boost_LIBRARIES} Eigen3::Eigen)
 target_compile_features(ec PUBLIC cxx_std_20)
 
 add_executable(tests src/QueueTests.cpp)
@@ -61,10 +52,4 @@ target_compile_features(tests PUBLIC cxx_std_20)
 
 enable_testing()
 
-set(ALL_CXX_SOURCE_FILES
-	${PROJECT_SOURCE_DIR}/include/motion_blow/*.hpp
-	${PROJECT_SOURCE_DIR}/src/blow.cpp
-	${PROJECT_SOURCE_DIR}/src/EigenCheck.cpp
-	)
-
-include(cmake/clang-cxx-dev-tools.cmake)
+add_test(NAME MotionBlowTests COMMAND tests)

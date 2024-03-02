@@ -1,3 +1,5 @@
+#include <utility> //boost asio needs this to exist before its include
+
 #include "messages/Measurement.hpp"
 #include "motion_blow/Device.hpp"
 #include "motion_blow/ImuDevice.hpp"

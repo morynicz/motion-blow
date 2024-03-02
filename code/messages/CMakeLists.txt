@@ -18,3 +18,5 @@ enable_testing()
 
 add_executable(messageTests src/MeasurementTests.cpp)
 target_link_libraries(messageTests PUBLIC gmock_main gtest gmock messages)
+
+add_test(NAME MessagesTests COMMAND messageTests)

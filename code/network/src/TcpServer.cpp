@@ -1,3 +1,5 @@
+#include <utility> //for buggy asio
+
 #include "network/TcpServer.hpp"
 #include <boost/asio.hpp>
 #include <ctime>
@@ -6,7 +8,6 @@
 #include <memory>
 #include <optional>
 #include <string>
-#include <utility>
 
 using boost::asio::ip::tcp;
 

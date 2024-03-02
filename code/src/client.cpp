@@ -1,8 +1,9 @@
+#include <utility> //boost is buggy
+
 #include "messages/Measurement.hpp"
 #include <array>
 #include <boost/asio.hpp>
 #include <iostream>
-#include <utility>
 
 using boost::asio::ip::tcp;
 
