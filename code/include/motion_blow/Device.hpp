@@ -2,11 +2,10 @@
 #include <iosfwd>
 #include <cstdint>
 
-class RTIMUSettings;
-class RTIMU;
 
 class Device
 {
+  public:
     struct Measurement
     {
         uint64_t timestamp;
@@ -19,16 +18,10 @@ class Device
         double z;
     };
 
+    virtual int getPollIntervalMs() const = 0;
+    virtual bool readMeasurement() = 0;
+    virtual Measurement getLastMeasurement() const = 0;
+    virtual ~Device() = default;
+private:
     friend std::ostream &operator<<(std::ostream &, const Measurement &);
-
-  public:
-    Device(const std::string &);
-    int getPollIntervalMs() const;
-    bool readMeasurement();
-    Measurement getLastMeasurement() const;
-    ~Device();
-
-  private:
-    RTIMUSettings *settings;
-    RTIMU *imu;
 };
