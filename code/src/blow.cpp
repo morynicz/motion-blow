@@ -3,6 +3,8 @@
 #include "messages/Measurement.hpp"
 #include "motion_blow/Device.hpp"
 #include "motion_blow/ImuDevice.hpp"
+#include "motion_blow/MeasurementHandler.hpp"
+#include "motion_blow/MeasurementWriter.hpp"
 #include "motion_blow/Queue.hpp"
 #include "network/TcpServer.hpp"
 #include <boost/program_options.hpp>
@@ -56,32 +58,6 @@ void runDevice(Queue<Device::Measurement> &queue, std::stop_source stop,
     }
 }
 
-class MeasurementHandler
-{
-  public:
-    virtual void handle(const Device::Measurement &) = 0;
-    virtual ~MeasurementHandler() = default;
-};
-
-class MeasurementWriter : public MeasurementHandler
-{
-  public:
-    MeasurementWriter(const std::string &fileName)
-    {
-        fs.open("output.m", std::fstream::out);
-        fs << "[\n";
-    }
-    void handle(const Device::Measurement &meas) { fs << meas << std::endl; }
-    ~MeasurementWriter()
-    {
-        fs << "];";
-        fs.close();
-    }
-
-  private:
-    std::fstream fs;
-};
-
 class ServerQueueFeeder : public MeasurementHandler
 {
   public:
@@ -98,8 +74,9 @@ class ServerQueueFeeder : public MeasurementHandler
     Queue<Device::Measurement> &serverQueue;
 };
 
-void saveToFile(Queue<Device::Measurement> &inputQeue, std::stop_source stop,
-                std::vector<std::unique_ptr<MeasurementHandler>> &&handlers)
+void consumeMeasurements(
+    Queue<Device::Measurement> &inputQeue, std::stop_source stop,
+    std::vector<std::unique_ptr<MeasurementHandler>> &&handlers)
 {
     auto stoken = stop.get_token();
 
@@ -229,7 +206,7 @@ int main(int argc, char **argv)
     std::stop_source stop;
     std::jthread devThread{runDevice, std::ref(inputQueue), stop,
                            std::move(device)};
-    std::jthread writeThread{saveToFile, std::ref(inputQueue), stop,
+    std::jthread writeThread{consumeMeasurements, std::ref(inputQueue), stop,
                              std::move(handlers)};
 
     char input = '1';

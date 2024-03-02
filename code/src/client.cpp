@@ -1,6 +1,7 @@
 #include <utility> //boost is buggy
 
 #include "messages/Measurement.hpp"
+#include "motion_blow/MeasurementWriter.hpp"
 #include <array>
 #include <boost/asio.hpp>
 #include <iostream>
@@ -26,6 +27,8 @@ int main(int argc, char *argv[])
         tcp::socket socket(io_context);
         boost::asio::connect(socket, endpoints);
 
+        MeasurementWriter writer("output.m");
+
         for (;;)
         {
             std::array<char, 1024> buf;
@@ -38,7 +41,6 @@ int main(int argc, char *argv[])
             else if (error)
                 throw boost::system::system_error(error); // Some other error.
 
-            //   std::cout.write(buf.data(), len);
             std::string interrim(buf.begin(), buf.begin() + len);
             messages::Measurement meas =
                 messages::Measurement::deserialize(interrim);
