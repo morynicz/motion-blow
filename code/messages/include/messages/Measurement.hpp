@@ -7,14 +7,22 @@ namespace messages
 struct Measurement
 {
     const uint64_t timestamp;
-    const double qx;
-    const double qy;
-    const double qz;
-    const double qs;
-    const double x;
-    const double y;
-    const double z;
-
+    struct Pose
+    {
+        const double x;
+        const double y;
+        const double z;
+        const double s;
+    } pose;
+    struct Accelerations
+    {
+        const double x;
+        const double y;
+        const double z;
+        const double a;
+        const double b;
+        const double c;
+    } accelerations;
     std::string serialize() const;
     static Measurement deserialize(const std::string &);
     friend std::ostream &operator<<(std::ostream &os, const Measurement &in);

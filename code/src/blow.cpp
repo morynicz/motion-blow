@@ -22,7 +22,7 @@ class DummyDevice : public Device
   public:
     Measurement getLastMeasurement() const override
     {
-        return {frameCounter, 0, 0, 0, 0, 0, 0};
+        return {frameCounter, {0, 0, 0, 0}, {0, 0, 0, 0, 0, 0}};
     }
     int getPollIntervalMs() const override { return 10; }
     bool readMeasurement() override
@@ -68,6 +68,19 @@ class ServerQueueFeeder : public MeasurementHandler
     void handle(const Device::Measurement &meas) override
     {
         serverQueue.push(meas);
+    }
+
+  private:
+    Queue<Device::Measurement> &serverQueue;
+};
+
+class MeasurementPrinter : public MeasurementHandler
+{
+  public:
+    MeasurementPrinter() = default;
+    void handle(const Device::Measurement &meas) override
+    {
+        std::cout << meas << std::endl;
     }
 
   private:
@@ -190,8 +203,12 @@ int main(int argc, char **argv)
                 while (auto meas = serverQueue.pop())
                 {
                     messages::Measurement measurement{
-                        meas->timestamp, meas->qx, meas->qy, meas->qz,
-                        meas->qs,        meas->x,  meas->y,  meas->z};
+                        meas->timestamp,
+                        {meas->pose.x, meas->pose.y, meas->pose.z,
+                         meas->pose.s},
+                        {meas->accelerations.x, meas->accelerations.y,
+                         meas->accelerations.z, meas->accelerations.a,
+                         meas->accelerations.b, meas->accelerations.c}};
                     return measurement.serialize();
                 }
                 return std::nullopt;

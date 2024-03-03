@@ -2,14 +2,26 @@ syntax = "proto3";
 
 package protos;
 
+message Accelerations
+{
+    double x = 1;
+    double y = 2;
+    double z = 3;
+    double a = 4;
+    double b = 5;
+    double c = 6;
+}
+
+message Pose
+{
+    double x = 1;
+    double y = 2;
+    double z = 3;
+    double s = 4;
+}
 message Measurement
 {
     uint64 timestamp = 1;
-    double qx = 2;
-    double qy = 3;
-    double qz = 4;
-    double qs = 5;
-    double x = 6;
-    double y = 7;
-    double z = 8;
+    Pose pose = 2;
+    Accelerations accelerations = 3;
 }

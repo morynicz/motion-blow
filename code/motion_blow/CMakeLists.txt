@@ -8,4 +8,5 @@ target_include_directories(motionBlowTests PUBLIC include)
 target_link_libraries(motionBlowTests PUBLIC gmock_main gtest gmock)
 target_compile_features(motionBlowTests PUBLIC cxx_std_20)
 
+enable_testing()
 add_test(NAME MotionBlowTests COMMAND motionBlowTests)
