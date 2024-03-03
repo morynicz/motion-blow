@@ -6,10 +6,10 @@ build:
 	sudo docker buildx build -t ${PROJECT} --build-context code=`pwd`/code .
 
 run:
-	sudo docker run --mount type=bind,source=`pwd`/code,target=/source,readonly -it ${PROJECT}
+	sudo docker run --mount type=bind,source=`pwd`/code,target=/source,readonly --mount type=bind,source=`pwd`/outputs,target=/outputs -it ${PROJECT}
 
 startssh:
-	sudo docker run --mount type=bind,source=`pwd`/code,target=/source,readonly -p 2222:22 -it ${PROJECT} /usr/sbin/sshd -D
+	sudo docker run --mount type=bind,source=`pwd`/code,target=/source,readonly --mount type=bind,source=`pwd`/outputs,target=/outputs -p 2222:22 -it ${PROJECT} /usr/sbin/sshd -D
 
 test:
 	sudo docker run --mount type=bind,source=`pwd`/code,target=/source,readonly -it ${PROJECT} ninja run_tests
