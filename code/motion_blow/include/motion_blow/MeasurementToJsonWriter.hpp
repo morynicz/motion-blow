@@ -2,12 +2,12 @@
 #include "motion_blow/MeasurementHandler.hpp"
 #include <fstream>
 
-class MeasurementWriter : public MeasurementHandler
+class MeasurementToJsonWriter : public MeasurementHandler
 {
   public:
-    MeasurementWriter(const std::string &fileName);
+    MeasurementToJsonWriter(const std::string &fileName);
     void handle(const Device::Measurement &meas) override;
-    ~MeasurementWriter();
+    ~MeasurementToJsonWriter();
 
   private:
     std::fstream fs;

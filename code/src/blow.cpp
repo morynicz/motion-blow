@@ -4,7 +4,8 @@
 #include "motion_blow/Device.hpp"
 #include "motion_blow/ImuDevice.hpp"
 #include "motion_blow/MeasurementHandler.hpp"
-#include "motion_blow/MeasurementWriter.hpp"
+#include "motion_blow/MeasurementPrinter.hpp"
+#include "motion_blow/MeasurementToJsonWriter.hpp"
 #include "motion_blow/Queue.hpp"
 #include "network/TcpServer.hpp"
 #include <boost/program_options.hpp>
@@ -68,19 +69,6 @@ class ServerQueueFeeder : public MeasurementHandler
     void handle(const Device::Measurement &meas) override
     {
         serverQueue.push(meas);
-    }
-
-  private:
-    Queue<Device::Measurement> &serverQueue;
-};
-
-class MeasurementPrinter : public MeasurementHandler
-{
-  public:
-    MeasurementPrinter() = default;
-    void handle(const Device::Measurement &meas) override
-    {
-        std::cout << meas << std::endl;
     }
 
   private:
@@ -172,7 +160,8 @@ int main(int argc, char **argv)
     {
         auto outputFile = vm["output"].as<std::string>();
         std::cout << outputFile << std::endl;
-        handlers.push_back(std::make_unique<MeasurementWriter>(outputFile));
+        handlers.push_back(
+            std::make_unique<MeasurementToJsonWriter>(outputFile));
     }
 
     if (vm.count("calib"))
