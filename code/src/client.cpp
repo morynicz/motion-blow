@@ -3,6 +3,7 @@
 #include "messages/Measurement.hpp"
 #include "motion_blow/Device.hpp"
 #include "motion_blow/MeasurementPrinter.hpp"
+#include "motion_blow/MeasurementToCsvWriter.hpp"
 #include "motion_blow/MeasurementToJsonWriter.hpp"
 #include <array>
 #include <boost/asio.hpp>
@@ -18,11 +19,14 @@ int main(int argc, char *argv[])
 
     std::string host{};
     int port{0};
-    std::string outputFile{};
+    std::string json{};
+    std::string csv{};
 
     desc.add_options()("help,h", "Print this help message and exit")(
-        "output,o", boost::program_options::value<std::string>(&outputFile),
-        "output file to save measurements locally")(
+        "json,j", boost::program_options::value<std::string>(&json),
+        "output json file to save measurements locally")(
+        "octave,o", boost::program_options::value<std::string>(&csv),
+        "Output octave file to save locally")(
         "server,s", boost::program_options::value<std::string>(&host),
         "server to connect to")("verbose,v", "print measurements to stdout")(
         "port,p", boost::program_options::value<int>(&port),
@@ -51,10 +55,14 @@ int main(int argc, char *argv[])
         handlers.push_back(std::make_unique<MeasurementPrinter>());
     }
 
-    if (vm.count("output"))
+    if (vm.count("json"))
     {
-        handlers.push_back(
-            std::make_unique<MeasurementToJsonWriter>(outputFile));
+        handlers.push_back(std::make_unique<MeasurementToJsonWriter>(json));
+    }
+
+    if (vm.count("csv"))
+    {
+        handlers.push_back(std::make_unique<MeasurementToCsvWriter>(csv));
     }
 
     try

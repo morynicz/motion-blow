@@ -1,4 +1,4 @@
-add_library(motionBlow src/Device.cpp src/ImuDevice.cpp src/MeasurementToJsonWriter.cpp src/MeasurementPrinter.cpp)
+add_library(motionBlow src/Device.cpp src/ImuDevice.cpp src/MeasurementToJsonWriter.cpp src/MeasurementPrinter.cpp src/MeasurementToCsvWriter.cpp)
 target_include_directories(motionBlow PUBLIC include)
 target_link_libraries(motionBlow PUBLIC RTIMULib ${Boost_LIBRARIES} messages network)
 target_compile_features(motionBlow PUBLIC cxx_std_20)
