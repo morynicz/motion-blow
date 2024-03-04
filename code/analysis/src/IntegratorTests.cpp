@@ -1,5 +1,5 @@
 #include "Eigen/Dense"
-#include "cut/Integrator.hpp"
+#include "analysis/Integrator.hpp"
 #include "gmock/gmock.h"
 #include "aquisition/Device.hpp"
 #include "gtest/gtest.h"

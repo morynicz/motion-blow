@@ -1,4 +1,4 @@
-#include "cut/Integrator.hpp"
+#include "analysis/Integrator.hpp"
 #include <utility>
 
 bool operator==(const SomeName &lhs, const SomeName &rhs)

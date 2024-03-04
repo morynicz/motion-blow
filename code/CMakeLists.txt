@@ -26,7 +26,7 @@ FetchContent_MakeAvailable(rtimulib googletest)
 add_subdirectory(messages)
 add_subdirectory(network)
 add_subdirectory(aquisition)
-add_subdirectory(cut)
+add_subdirectory(analysis)
 
 
 add_executable(blow src/blow.cpp)
