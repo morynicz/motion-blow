@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
     desc.add_options()("help,h", "Print this help message and exit")(
         "json,j", boost::program_options::value<std::string>(&json),
         "output json file to save measurements locally")(
-        "octave,o", boost::program_options::value<std::string>(&csv),
+        "csv,c", boost::program_options::value<std::string>(&csv),
         "Output octave file to save locally")(
         "server,s", boost::program_options::value<std::string>(&host),
         "server to connect to")("verbose,v", "print measurements to stdout")(
