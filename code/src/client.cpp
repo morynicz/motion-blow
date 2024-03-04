@@ -1,10 +1,10 @@
 #include <utility> //boost is buggy
 
 #include "messages/Measurement.hpp"
-#include "motion_blow/Device.hpp"
-#include "motion_blow/MeasurementPrinter.hpp"
-#include "motion_blow/MeasurementToCsvWriter.hpp"
-#include "motion_blow/MeasurementToJsonWriter.hpp"
+#include "aquisition/Device.hpp"
+#include "aquisition/MeasurementPrinter.hpp"
+#include "aquisition/MeasurementToCsvWriter.hpp"
+#include "aquisition/MeasurementToJsonWriter.hpp"
 #include <array>
 #include <boost/asio.hpp>
 #include <boost/program_options.hpp>

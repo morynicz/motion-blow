@@ -25,17 +25,17 @@ FetchContent_MakeAvailable(rtimulib googletest)
 
 add_subdirectory(messages)
 add_subdirectory(network)
-add_subdirectory(motion_blow)
+add_subdirectory(aquisition)
 add_subdirectory(cut)
 
 
 add_executable(blow src/blow.cpp)
-target_link_libraries(blow PUBLIC ${Boost_LIBRARIES} messages network motionBlow)
+target_link_libraries(blow PUBLIC ${Boost_LIBRARIES} messages network aquisition)
 target_compile_features(blow PUBLIC cxx_std_20)
 
 add_executable(client src/client.cpp )
 target_compile_features(client PUBLIC cxx_std_20)
-target_link_libraries(client ${Boost_LIBRARIES} Threads::Threads messages motionBlow)
+target_link_libraries(client ${Boost_LIBRARIES} Threads::Threads messages aquisition)
 
 add_executable(ec src/EigenCheck.cpp)
 target_include_directories(ec PUBLIC include)
@@ -44,5 +44,3 @@ target_compile_features(ec PUBLIC cxx_std_20)
 
 
 enable_testing()
-
-# add_test(NAME MotionBlowTests COMMAND motionBlowTests)

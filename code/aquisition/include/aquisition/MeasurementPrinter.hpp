@@ -1,5 +1,5 @@
 #pragma once
-#include "motion_blow/MeasurementHandler.hpp"
+#include "aquisition/MeasurementHandler.hpp"
 #include <iosfwd>
 
 class MeasurementPrinter : public MeasurementHandler

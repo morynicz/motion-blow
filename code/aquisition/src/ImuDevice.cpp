@@ -1,4 +1,4 @@
-#include "motion_blow/ImuDevice.hpp"
+#include "aquisition/ImuDevice.hpp"
 #include "RTIMULib/RTIMULib.h"
 #include <iostream>
 

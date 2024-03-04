@@ -1,6 +1,6 @@
 #pragma once
 #include "Eigen/Dense"
-#include "motion_blow/Device.hpp"
+#include "aquisition/Device.hpp"
 #include <cctype>
 #include <vector>
 

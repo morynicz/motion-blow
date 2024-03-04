@@ -1,12 +1,12 @@
 #include <utility> //boost asio needs this to exist before its include
 
 #include "messages/Measurement.hpp"
-#include "motion_blow/Device.hpp"
-#include "motion_blow/ImuDevice.hpp"
-#include "motion_blow/MeasurementHandler.hpp"
-#include "motion_blow/MeasurementPrinter.hpp"
-#include "motion_blow/MeasurementToJsonWriter.hpp"
-#include "motion_blow/Queue.hpp"
+#include "aquisition/Device.hpp"
+#include "aquisition/ImuDevice.hpp"
+#include "aquisition/MeasurementHandler.hpp"
+#include "aquisition/MeasurementPrinter.hpp"
+#include "aquisition/MeasurementToJsonWriter.hpp"
+#include "aquisition/Queue.hpp"
 #include "network/TcpServer.hpp"
 #include <boost/program_options.hpp>
 #include <chrono>

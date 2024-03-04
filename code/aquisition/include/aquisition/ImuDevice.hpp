@@ -1,5 +1,5 @@
 #pragma once
-#include "motion_blow/Device.hpp"
+#include "aquisition/Device.hpp"
 #include <cstdint>
 #include <iosfwd>
 

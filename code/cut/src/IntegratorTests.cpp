@@ -1,7 +1,7 @@
 #include "Eigen/Dense"
 #include "cut/Integrator.hpp"
 #include "gmock/gmock.h"
-#include "motion_blow/Device.hpp"
+#include "aquisition/Device.hpp"
 #include "gtest/gtest.h"
 
 TEST(TrajectoryIntegratorTests,

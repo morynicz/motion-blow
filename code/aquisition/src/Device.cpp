@@ -1,4 +1,4 @@
-#include "motion_blow/Device.hpp"
+#include "aquisition/Device.hpp"
 #include <ostream>
 
 std::ostream &operator<<(std::ostream &os,
