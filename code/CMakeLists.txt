@@ -26,6 +26,7 @@ FetchContent_MakeAvailable(rtimulib googletest)
 add_subdirectory(messages)
 add_subdirectory(network)
 add_subdirectory(motion_blow)
+add_subdirectory(cut)
 
 
 add_executable(blow src/blow.cpp)
